@@ -1,0 +1,63 @@
+{
+  "name": "boilerplate-node-typescript",
+  "version": "1.0.0",
+  "description": "Typescript-postgres-server",
+  "main": "server.ts",
+  "scripts": {
+    "get-openapi-schema": "curl -O https://raw.githubusercontent.com/Jiratech/boilerplate-openapi-schema/master/schema.json",
+    "openapi-generator": "yarn get-openapi-schema && openapi-generator generate -i schema.json -g typescript-node -o ./api/openapi && rm -fr ./api/openapi/api && rm ./api/openapi/api.ts",
+    "start-server": "tsc -p tsconfig.production.json && node build/server.js",
+    "start": "yarn openapi-generator && nodemon -e ts -w ./ -x yarn start-server",
+    "test": "mocha -r ts-node/register ./tests/**/*.test.ts",
+    "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" yarn test"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "Jiratech",
+  "license": "ISC",
+  "dependencies": {
+    "@openapitools/openapi-generator-cli": "1.0.10-4.1.2",
+    "@sentry/integrations": "^5.15.0",
+    "@sentry/node": "^5.14.1",
+    "@types/bluebird": "^3.5.29",
+    "@types/express-serve-static-core": "^4.17.2",
+    "@types/js-yaml": "^3.12.4",
+    "@types/jsonwebtoken": "^8.3.8",
+    "@types/node": "^13.7.7",
+    "@types/request": "^2.48.4",
+    "@types/swagger-ui-express": "^4.1.2",
+    "@types/validator": "^12.0.1",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^8.2.0",
+    "dtsgenerator": "^2.5.0",
+    "express": "^4.17.1",
+    "express-async-errors": "^3.1.1",
+    "express-openapi-validator": "^3.10.0",
+    "js-yaml": "^3.13.1",
+    "jsonwebtoken": "^8.5.1",
+    "nodemon": "^2.0.2",
+    "pg": "^8.2.0",
+    "pg-hstore": "^2.3.3",
+    "reflect-metadata": "^0.1.13",
+    "sequelize": "^5.21.5",
+    "sequelize-typescript": "^1.1.0",
+    "source-map-support": "^0.5.16",
+    "swagger-ui-express": "^4.1.4",
+    "tslib": "^1.11.1",
+    "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.11",
+    "@types/mocha": "^7.0.2",
+    "@types/multer": "^1.4.2",
+    "@types/sequelize": "^4.28.8",
+    "chai": "^4.2.0",
+    "mocha": "^7.1.1",
+    "nodemon": "^2.0.2",
+    "nyc": "^15.0.0",
+    "ts-node": "^8.8.1",
+    "typescript": "^3.8.3"
+  }
+}

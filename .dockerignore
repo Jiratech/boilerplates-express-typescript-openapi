@@ -1,0 +1,11 @@
+.git
+.gitignore
+node_modules
+npm-debug.log
+Dockerfile*
+README.md
+LICENSE
+.vscode
+api/openapi
+.DS_Store
+yarn-error.log

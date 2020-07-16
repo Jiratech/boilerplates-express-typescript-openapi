@@ -1,0 +1,620 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "",
+    "version": "1.0.0",
+    "title": "OpenApi boilerplate",
+    "termsOfService": "https://jiratech.com",
+    "contact": {
+      "email": "jiratech@jiratech.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "tags": [
+    {
+      "name": "user",
+      "description": "Endpoint for user related requests"
+    },
+    {
+      "name": "authentication",
+      "description": "Endpoint for authentication requests"
+    },
+    {
+      "name": "role",
+      "description": "Endpoint for role related requests"
+    }
+  ],
+  "paths": {
+    "/authentication/register": {
+      "post": {
+        "tags": [
+          "authentication"
+        ],
+        "summary": "register",
+        "description": "",
+        "operationId": "register",
+        "x-eov-operation-handler": "controllers/AuthenticationController",
+        "parameters": [],
+        "requestBody": {
+          "description": "The user object to be created",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The request has been fulfilled and has resulted in one or more new resources being created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request has wrong format"
+          },
+          "409": {
+            "description": "An account with the following email is already in use"
+          }
+        }
+      }
+    },
+    "/authentication/login": {
+      "post": {
+        "tags": [
+          "authentication"
+        ],
+        "summary": "authenticate user",
+        "description": "",
+        "operationId": "login",
+        "x-eov-operation-handler": "controllers/AuthenticationController",
+        "parameters": [],
+        "requestBody": {
+          "description": "Authentication request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JwtAuthenticationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The request has been fulfilled and has resulted in one or more new resources being created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JwtAuthenticationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request has wrong format"
+          },
+          "401": {
+            "description": "You don't have privileges to access this resource"
+          },
+          "404": {
+            "description": "The requested resource was not found"
+          }
+        }
+      }
+    },
+    "/authentication/refresh": {
+      "get": {
+        "security": [
+          {
+            "RefreshKeyAuth": []
+          }
+        ],
+        "tags": [
+          "authentication"
+        ],
+        "summary": "get new access token",
+        "description": "send refresh token to get new access token",
+        "operationId": "refresh",
+        "x-eov-operation-handler": "controllers/AuthenticationController",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The request has been fulfilled and a new access token has been received",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JwtAuthenticationResponse"
+                }
+              }
+            }
+          },
+          "440": {
+            "description": "Your session has expired"
+          }
+        }
+      }
+    },
+    "/role": {
+      "get": {
+        "tags": [
+          "role"
+        ],
+        "operationId": "getAllRoles",
+        "x-eov-operation-handler": "controllers/RoleController",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Role"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "get all users",
+        "description": "",
+        "operationId": "getUsers",
+        "x-eov-operation-handler": "controllers/UserController",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "create user",
+        "description": "create any type of user",
+        "operationId": "createUser",
+        "x-eov-operation-handler": "controllers/UserController",
+        "parameters": [],
+        "requestBody": {
+          "description": "The user object to be created",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The request has been fulfilled and has resulted in one or more new resources being created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request has wrong format"
+          },
+          "409": {
+            "description": "An account with the following email is already in use"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/user/{userId}": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "get one user",
+        "description": "Get one user using an id",
+        "operationId": "getUserById",
+        "x-eov-operation-handler": "controllers/UserController",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "The requested resource was not found"
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "modify one user",
+        "description": "Modify a user using an id",
+        "operationId": "modifyUser",
+        "x-eov-operation-handler": "controllers/UserController",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The user object to be created",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The request has been fulfilled and has resulted in one or more new resources being created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "delete user",
+        "description": "Delete a user using an id",
+        "operationId": "deleteUser",
+        "x-eov-operation-handler": "controllers/UserController",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorMessage"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "The requested resource was not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "RefreshKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "refreshToken"
+      }
+    },
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "email for current user",
+            "example": "user@gmail.com"
+          },
+          "username": {
+            "type": "string",
+            "description": "Username",
+            "example": "JohnDoe"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "firstName",
+            "example": "John"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "lastName",
+            "example": "Doe"
+          },
+          "password": {
+            "type": "string",
+            "description": "password",
+            "example": "password123"
+          },
+          "roleId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "role for current user",
+            "example": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "user unique uuid",
+            "example": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
+          },
+          "authorities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/UserStatusEnum"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "phone number",
+            "example": "0795452587"
+          },
+          "creationTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time expressed according to ISO 8601 (e.g. 2018-06-24T23:10:28+03:00)"
+          },
+          "lastUpdateTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time expressed according to ISO 8601 (e.g. 2018-06-24T23:10:28+03:00)"
+          }
+        }
+      },
+      "JwtAuthenticationRequest": {
+        "type": "object",
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "email for current user",
+            "example": "user@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "description": "password",
+            "example": "password123"
+          }
+        }
+      },
+      "JwtAuthenticationResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "access token"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "refresh token"
+          }
+        }
+      },
+      "ForgotPasswordRequest": {
+        "type": "object",
+        "properties": {
+          "callbackRoute": {
+            "type": "string",
+            "description": "route the sent to user in email in order to reset his password"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "email for current user",
+            "example": "user@gmail.com"
+          }
+        }
+      },
+      "ResetPasswordRequest": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "description": "password",
+            "example": "password123"
+          },
+          "repeatPassword": {
+            "type": "string",
+            "description": "password",
+            "example": "password123"
+          },
+          "token": {
+            "type": "string",
+            "description": "one time token used to validate the password reset"
+          }
+        }
+      },
+      "UpdatePasswordRequest": {
+        "type": "object",
+        "properties": {
+          "oldPassword": {
+            "type": "string",
+            "description": "password",
+            "example": "password123"
+          },
+          "newPassword": {
+            "type": "string",
+            "description": "password",
+            "example": "password123"
+          },
+          "repeatPassword": {
+            "type": "string",
+            "description": "password",
+            "example": "password123"
+          }
+        }
+      },
+      "UserStatusEnum": {
+        "type": "string",
+        "enum": [
+          "active",
+          "deleted"
+        ]
+      },
+      "Role": {
+        "type": "object",
+        "properties": {
+          "roleId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "unique role id for user",
+            "example": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
+          },
+          "name": {
+            "type": "string",
+            "description": "unique role name for user",
+            "example": "ROLE_USER"
+          }
+        }
+      },
+      "ErrorMessage": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of error message",
+            "example": "BadRequest"
+          },
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "400"
+          },
+          "message": {
+            "type": "string",
+            "description": "Descriptive message for error",
+            "example": "Request is not valid"
+          }
+        }
+      }
+    }
+  }
+}

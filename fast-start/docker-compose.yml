@@ -1,0 +1,31 @@
+version: '3.4'
+services:
+  backend:
+    image: 'node-boilerplate:latest'
+    container_name: backend
+    hostname: backend
+    restart: always
+    expose:
+      - "3000"
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_LANG=postgres        
+      - PORT=3000
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=testdb
+      - DB_USER=test
+      - DB_PASS=test
+    depends_on:
+      - db
+
+  db:
+    image: postgres:11-alpine
+    environment:
+        POSTGRES_USER: test
+        POSTGRES_PASSWORD: test
+        POSTGRES_DB: testdb
+    ports:
+        - 5432:5432
+    container_name: database-1
